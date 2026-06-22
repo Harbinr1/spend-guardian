@@ -1,7 +1,15 @@
 # Spend Guardian
 
 **AI‑powered SaaS subscription waste detection with human‑in‑the‑loop safety.**  
-A 5‑agent pipeline that audits bank statements to find duplicate charges, overlapping tools, and unclear ownership — then drafts cancellation/downgrade emails for a human to approve. Never sends an email automatically.
+
+AI-powered SaaS spend auditing system built with Google ADK and Groq.
+
+Features:
+- 5-agent architecture
+- Human-in-the-loop approval workflow
+- FastAPI + CLI interfaces
+- Safety-constrained decision making
+- 7/7 evaluation suite passing
 
 Built for the Kaggle x Google “AI Agents: Intensive Vibe Coding” Capstone — **Agents for Business** track.
 
