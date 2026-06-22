@@ -27,6 +27,28 @@ Spend Guardian is a **multi‑agent pipeline** that:
 
 ---
 
+## Demo
+
+### Input
+
+AWS, $312.40
+AWS, $312.40
+Figma, $45
+Adobe, $60
+
+### Output
+
+Flag: Duplicate Charge
+Vendor: AWS
+Confidence: HIGH
+Potential Savings: $312.40
+
+Flag: Category Overlap
+Vendors: Figma + Adobe
+Confidence: MEDIUM
+Potential Savings: Investigation Required
+
+
 ## Architecture
 
 ```mermaid
