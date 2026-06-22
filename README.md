@@ -1,4 +1,4 @@
-Spend Guardian
+#Spend Guardian
 AI‑powered SaaS subscription waste detection with human‑in‑the‑loop safety.
 A 5‑agent pipeline that audits bank statements to find duplicate charges, overlapping tools, and unclear ownership — then drafts cancellation/downgrade emails for a human to approve. Never sends an email automatically.
 
