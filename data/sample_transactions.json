@@ -1,0 +1,74 @@
+[
+    {
+        "date": "2026-01-03",
+        "raw_description": "FIGMA INC",
+        "amount": 45.00,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-04",
+        "raw_description": "ADOBE CREATIVE CLOUD",
+        "amount": 59.99,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-05",
+        "raw_description": "JIRA SOFTWARE",
+        "amount": 70.00,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-05",
+        "raw_description": "ASANA INC",
+        "amount": 24.99,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-06",
+        "raw_description": "AWS WEB SERVICES",
+        "amount": 312.40,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-07",
+        "raw_description": "AWS WEB SERVICES",
+        "amount": 312.40,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-06",
+        "raw_description": "AWS*EC2-USAGE",
+        "amount": 88.10,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-08",
+        "raw_description": "NOTION LABS INC CARD 4242 4242 4242 4242",
+        "amount": 18.00,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-02-08",
+        "raw_description": "NOTION LABS INC",
+        "amount": 18.00,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-09",
+        "raw_description": "SLACK TECHNOLOGIES",
+        "amount": "N/A",
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-10",
+        "raw_description": "ZENDESK SUPPORT SUITE",
+        "amount": 89.00,
+        "currency": "CHF"
+    },
+    {
+        "date": "2026-01-11",
+        "raw_description": "RAYCAST PRO SUBSCRIPTION",
+        "amount": 12.00,
+        "currency": "CHF"
+    }
+]

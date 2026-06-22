@@ -1,0 +1,129 @@
+{
+  "transactions": [
+    {
+      "transaction_id": "txn_0",
+      "date": "2026-01-03",
+      "raw_description": "FIGMA INC",
+      "amount": 45.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_1",
+      "date": "2026-01-04",
+      "raw_description": "ADOBE CREATIVE CLOUD",
+      "amount": 59.99,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_2",
+      "date": "2026-01-05",
+      "raw_description": "JIRA SOFTWARE",
+      "amount": 70.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_3",
+      "date": "2026-01-05",
+      "raw_description": "ASANA INC",
+      "amount": 24.99,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_4",
+      "date": "2026-01-06",
+      "raw_description": "AWS WEB SERVICES",
+      "amount": 312.4,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_5",
+      "date": "2026-01-07",
+      "raw_description": "AWS WEB SERVICES",
+      "amount": 312.4,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_6",
+      "date": "2026-01-06",
+      "raw_description": "AWS*EC2-USAGE",
+      "amount": 88.1,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_7",
+      "date": "2026-01-08",
+      "raw_description": "NOTION LABS INC CARD XXXX-XXXX-XXXX-XXXX",
+      "amount": 18.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_8",
+      "date": "2026-02-08",
+      "raw_description": "NOTION LABS INC",
+      "amount": 18.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_9",
+      "date": "2026-01-09",
+      "raw_description": "SLACK TECHNOLOGIES",
+      "amount": 12.5,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_10",
+      "date": "2026-01-10",
+      "raw_description": "ZENDESK SUPPORT SUITE",
+      "amount": 89.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_11",
+      "date": "2026-01-11",
+      "raw_description": "RAYCAST PRO SUBSCRIPTION",
+      "amount": 12.0,
+      "currency": "CHF"
+    }
+  ],
+  "waste_flags": [
+    {
+      "flag_id": "exact_dup_AWS_312.4",
+      "vendor_name": "AWS",
+      "overlap_category": "exact_duplicate",
+      "confidence_score": "high",
+      "requires_human_review": true,
+      "reason": "Exact duplicate charge: AWS for 312.4 appears 2 times, with at least two charges within 3 days.",
+      "transaction_ids": [
+        "txn_4",
+        "txn_5"
+      ],
+      "monthly_cost": 624.8
+    },
+    {
+      "flag_id": "cat_overlap_Design",
+      "vendor_name": "Adobe Creative Cloud, Figma",
+      "overlap_category": "category_overlap",
+      "confidence_score": "medium",
+      "requires_human_review": true,
+      "reason": "Multiple vendors in category 'Design': Adobe Creative Cloud, Figma. No usage data available to confirm distinct use cases.",
+      "transaction_ids": [
+        "txn_0",
+        "txn_1"
+      ],
+      "monthly_cost": 104.99000000000001
+    },
+    {
+      "flag_id": "cat_overlap_Project Management",
+      "vendor_name": "Asana, Jira",
+      "overlap_category": "category_overlap",
+      "confidence_score": "medium",
+      "requires_human_review": true,
+      "reason": "Multiple vendors in category 'Project Management': Asana, Jira. No usage data available to confirm distinct use cases.",
+      "transaction_ids": [
+        "txn_2",
+        "txn_3"
+      ],
+      "monthly_cost": 94.99
+    }
+  ]
+}

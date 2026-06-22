@@ -1,0 +1,15 @@
+{
+  "waste_flag": {
+    "flag_id": "test_1",
+    "vendor_name": "Figma",
+    "overlap_category": "category_overlap",
+    "confidence_score": "medium",
+    "requires_human_review": true,
+    "reason": "Same category as Adobe",
+    "transaction_ids": [
+      "txn_0"
+    ],
+    "monthly_cost": 45.0
+  },
+  "recipient": "finance@acme.com"
+}

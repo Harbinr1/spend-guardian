@@ -1,0 +1,174 @@
+{
+  "transactions": [
+    {
+      "transaction_id": "txn_0",
+      "date": "2026-01-03",
+      "raw_description": "FIGMA INC",
+      "amount": 45.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_1",
+      "date": "2026-01-04",
+      "raw_description": "ADOBE CREATIVE CLOUD",
+      "amount": 59.99,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_2",
+      "date": "2026-01-05",
+      "raw_description": "JIRA SOFTWARE",
+      "amount": 70.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_3",
+      "date": "2026-01-05",
+      "raw_description": "ASANA INC",
+      "amount": 24.99,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_4",
+      "date": "2026-01-06",
+      "raw_description": "AWS WEB SERVICES",
+      "amount": 312.4,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_5",
+      "date": "2026-01-07",
+      "raw_description": "AWS WEB SERVICES",
+      "amount": 312.4,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_6",
+      "date": "2026-01-06",
+      "raw_description": "AWS*EC2-USAGE",
+      "amount": 88.1,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_7",
+      "date": "2026-01-08",
+      "raw_description": "NOTION LABS INC CARD XXXX-XXXX-XXXX-XXXX",
+      "amount": 18.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_8",
+      "date": "2026-02-08",
+      "raw_description": "NOTION LABS INC",
+      "amount": 18.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_9",
+      "date": "2026-01-09",
+      "raw_description": "SLACK TECHNOLOGIES",
+      "amount": 12.5,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_10",
+      "date": "2026-01-10",
+      "raw_description": "ZENDESK SUPPORT SUITE",
+      "amount": 89.0,
+      "currency": "CHF"
+    },
+    {
+      "transaction_id": "txn_11",
+      "date": "2026-01-11",
+      "raw_description": "RAYCAST PRO SUBSCRIPTION",
+      "amount": 12.0,
+      "currency": "CHF"
+    }
+  ],
+  "vendor_matches": [
+    {
+      "transaction_id": "txn_0",
+      "vendor_name": "Figma",
+      "category": "Design",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_1",
+      "vendor_name": "Adobe Creative Cloud",
+      "category": "Design",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_2",
+      "vendor_name": "Jira",
+      "category": "Project Management",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_3",
+      "vendor_name": "Asana",
+      "category": "Project Management",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_4",
+      "vendor_name": "AWS",
+      "category": "Cloud Infrastructure",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_5",
+      "vendor_name": "AWS",
+      "category": "Cloud Infrastructure",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_6",
+      "vendor_name": "AWS",
+      "category": "Cloud Infrastructure",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_7",
+      "vendor_name": "Notion",
+      "category": "Productivity",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_8",
+      "vendor_name": "Notion",
+      "category": "Productivity",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_9",
+      "vendor_name": "Slack",
+      "category": "Communication",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_10",
+      "vendor_name": "Zendesk",
+      "category": "Customer Support",
+      "match_method": "rule_lookup",
+      "match_confidence": "high"
+    },
+    {
+      "transaction_id": "txn_11",
+      "vendor_name": "Raycast",
+      "category": "Software",
+      "match_method": "llm_fallback",
+      "match_confidence": "low"
+    }
+  ]
+}
