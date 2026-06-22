@@ -28,7 +28,6 @@ Spend Guardian is a **multi‑agent pipeline** that:
 ---
 
 ## Architecture
-
 Bank Statement
 │
 ▼
@@ -61,6 +60,7 @@ Bank Statement
 │ Action (draft) │ HIGH‑tier LLM — drafts only, structurally cannot send
 └─────────────────┘
 
+text
 
 The pipeline runs sequentially: **Ingestion → Classification → Waste Detection → Recommendation**. The **Action agent is not automatic** — it’s triggered by a human selecting a specific waste flag.
 
@@ -103,16 +103,16 @@ An **eval suite** (`eval/run_evals.py`) enforces these rules. Any flag with `req
 git clone https://github.com/Harbinr1/spend-guardian.git
 cd spend-guardian
 pip install -r requirements.txt
-
 Create a .env file in the project root:
+
+text
 GROQ_API_KEY=your_groq_api_key_here
 MODEL_LOW=groq/openai/gpt-oss-20b
 MODEL_MEDIUM=groq/openai/gpt-oss-20b
 MODEL_HIGH=groq/openai/gpt-oss-120b
-
 Run the Full Pipeline (CLI)
+bash
 python -m cli.audit audit data/sample_transactions.json
-
 This will:
 
 Ingest 12 sample transactions (one malformed — Slack with amount="N/A" — which is skipped with a warning)
@@ -123,34 +123,34 @@ Flag an exact duplicate (AWS, $312.40 billed twice within 3 days) and two catego
 
 Produce savings reports with potential savings calculated from actual amounts
 
-
 Generate a Draft (requires a previous audit)
-
+bash
 python -m cli.audit draft exact_dup_AWS_312.4 --recipient finance@acme.com
-
 Approve and Mock‑Send a Draft
-
+bash
 python -m cli.audit approve draft_exact_dup_AWS_312.4
-
 The “send” is a mock — it appends a SENT entry to runs/drafts.jsonl and prints the draft to console.
 
 Run with ADK Orchestrator
+bash
 python -m cli.audit audit data/sample_transactions.json --adk
 Same output, but using the ADK‑wrapped agents.
 
 Run the Eval Suite
+bash
 python -m eval.run_evals
 All 7 golden cases should pass (including the normal recurrence exclusion).
 
-
 API (Optional)
 Start the FastAPI server:
+
+bash
 uvicorn api.main:app --reload
 Then open http://127.0.0.1:8000/docs for interactive Swagger documentation.
 Endpoints: POST /audit, GET /flags, GET /drafts, POST /draft, POST /approve.
 
-
 Repository Structure
+text
 ├── agents/               # Five agents + ADK wrappers + contract docs (*.md)
 ├── pipeline/             # Orchestrator (original + ADK)
 ├── mcp/                  # Mock Gmail client + draft store
@@ -164,7 +164,6 @@ Repository Structure
 ├── RUNBOOK.md            # Full build runbook (source of truth for development)
 ├── AGENTS.md             # Agent contracts and locked file list
 └── README.md             # This file
-
 Future Work
 data/taxonomy.json — central vendor dictionary
 
@@ -179,5 +178,3 @@ Real Gmail OAuth integration
 Caching, rate limiting, observability
 
 These are explicitly out of scope for the capstone but represent a natural production path.
-
----
