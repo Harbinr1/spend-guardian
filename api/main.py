@@ -9,7 +9,7 @@ from typing import Any, Dict, List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from pipeline.orchestrator import run_pipeline
+from pipeline.adk_orchestrator import run_pipeline_adk as run_pipeline
 from mcp.gmail_client import create_draft, send_draft
 from mcp.draft_store import read_all_drafts, update_draft_status, find_draft_by_id
 from agents.action import run as run_action

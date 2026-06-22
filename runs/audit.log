@@ -1,0 +1,3 @@
+{"timestamp": "2026-06-22T19:28:24.602283", "action": "ingestion_error", "row": {"date": "2026-01-09", "raw_description": "SLACK TECHNOLOGIES", "amount": "N/A", "currency": "CHF"}, "error": "could not convert string to float: 'N/A'"}
+{"timestamp": "2026-06-22T19:31:17.188363", "action": "Cancel duplicate subscription", "draft_id": "draft_exact_dup_AWS_312.4", "flag_id": "exact_dup_AWS_312.4", "savings": 624.8}
+{"timestamp": "2026-06-22T19:31:58.435860", "action": "Cancel duplicate subscription", "draft_id": "draft_exact_dup_AWS_312.4", "flag_id": "exact_dup_AWS_312.4", "savings": 624.8}

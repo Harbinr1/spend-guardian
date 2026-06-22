@@ -203,21 +203,21 @@
       "report_id": "report_exact_dup_AWS_312.4",
       "flag_id": "exact_dup_AWS_312.4",
       "action": "Cancel duplicate subscription",
-      "reasoning": "The flag shows an exact duplicate AWS charge of $624.8 per month appearing twice within 3 days with high confidence; removing the duplicate will eliminate $624.8 waste, but a human must verify before cancellation.",
+      "reasoning": "The flag shows an exact duplicate AWS charge of 312.4 appearing twice within 3 days, costing $624.8 monthly. This clear duplication warrants cancelling the duplicate subscription, pending human verification.",
       "potential_savings": 624.8
     },
     {
       "report_id": "report_cat_overlap_Design",
       "flag_id": "cat_overlap_Design",
       "action": "Investigate further",
-      "reasoning": "Multiple design tools (Adobe Creative Cloud, Figma) appear in the same category with a medium confidence overlap. Without usage data we cannot confirm distinct needs, so a human should review the subscriptions before any change. All flags require human review.",
+      "reasoning": "Multiple design tools (Adobe Creative Cloud, Figma) overlap in category; without usage data we cannot confirm distinct needs. Recommend human review to assess redundancy and potential cost optimization.",
       "potential_savings": 104.99000000000001
     },
     {
       "report_id": "report_cat_overlap_Project Management",
       "flag_id": "cat_overlap_Project Management",
       "action": "Investigate further",
-      "reasoning": "Multiple project management tools (Asana, Jira) are subscribed; without usage data we cannot confirm distinct use cases. Recommend human investigation to assess overlap before any action. All flags require human review.",
+      "reasoning": "Two project\u2011management tools (Asana, Jira) are subscribed to in the same category with a medium confidence overlap. Without usage data we cannot confirm distinct use cases, so a human should review the subscriptions to decide if one can be removed or consolidated. All flags require human review.",
       "potential_savings": 94.99
     }
   ]

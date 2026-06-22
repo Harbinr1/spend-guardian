@@ -1,3 +1,4 @@
+# Superseded by adk_orchestrator.py – kept for reference only.
 """
 Orchestrator — ingestion → classification → waste detection → recommendation.
 Action is NOT part of the automatic sequence (triggered on human selection).

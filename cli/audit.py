@@ -6,7 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from pipeline.orchestrator import run_pipeline
+from pipeline.adk_orchestrator import run_pipeline_adk as run_pipeline
 from mcp.gmail_client import create_draft, send_draft
 from mcp.draft_store import read_all_drafts, update_draft_status
 from agents.action import run as run_action
@@ -43,13 +43,8 @@ def _load_last_state():
 
 
 def cmd_audit(args):
-    """Run the full audit pipeline and print results."""
     data = json.loads(Path(args.input).read_text())
-    if getattr(args, "adk", False):
-        from pipeline.adk_orchestrator import run_pipeline_adk
-        state = run_pipeline_adk(data)
-    else:
-        state = run_pipeline(data)
+    state = run_pipeline(data)
     _save_state(state)
     # Also print the result
     result = {
@@ -109,26 +104,69 @@ def cmd_approve(args):
     if not updated:
         print(f"Draft {draft_id} not found.")
         return
-    result = send_draft(updated)
-    print(f"Draft {draft_id} approved and sent (mock). Status: SENT")
 
+    # 1. Find the flag_id from the draft
+    all_drafts = read_all_drafts()
+    draft = next((d for d in all_drafts if d.get("draft_id") == draft_id), None)
+    if draft is None:
+        print(f"Draft {draft_id} found in status update but not in full list. Aborting.")
+        return
+    
+    flag_id = draft.get("flag_id")
+    if not flag_id:
+        print(f"Draft {draft_id} has no flag_id. Aborting.")
+        return
+
+    # 2. Load the last audit state to get the actual savings report
+    state = _load_last_state()
+    if state is None:
+        print("No audit data found. Run 'audit' first.")
+        return
+
+    # 3. Find the matching savings report
+    report = next((r for r in state.savings_reports if r.flag_id == flag_id), None)
+    if report is None:
+        print(f"No savings report found for flag_id: {flag_id}")
+        return
+
+    # 4. Post to Slack with REAL data from the report
+    from mcp.action_agent import post_draft_to_slack
+    result = post_draft_to_slack(
+        flag_id=flag_id,
+        action=report.action,
+        reasoning=report.reasoning,
+        potential_savings=report.potential_savings
+    )
+
+    from mcp.audit_log import log_audit_entry
+
+    log_audit_entry("draft_approved", {
+        "draft_id": draft_id,
+        "flag_id": flag_id,
+        "action": report.action,
+        "savings": report.potential_savings
+    })
+
+    # Optionally mark as SENT in draft store
+    update_draft_status(draft_id, "SENT")
+
+    print(f"[OK] Draft {draft_id} approved and posted to Slack. Status: {result['status']}")
 
 def main():
     parser = argparse.ArgumentParser(prog="spendguardian", description="Spend Guardian CLI")
     sub = parser.add_subparsers(dest="command")
 
-    # audit
     p_audit = sub.add_parser("audit", help="Run full audit on a transactions file")
-    p_audit.add_argument("input", help="Path to JSON file with transactions (list or csv_data)")
-    p_audit.add_argument("--adk", action="store_true", help="Run using ADK orchestrator")
+    p_audit.add_argument("input", help="Path to JSON transactions file")
 
-    # list-flags
+    
     sub.add_parser("list-flags", help="List waste flags from last audit")
     sub.add_parser("list-drafts", help="List saved drafts")
 
     p_draft = sub.add_parser("draft", help="Generate an outreach draft for a specific flag")
     p_draft.add_argument("flag_id", help="Waste flag ID to draft for")
     p_draft.add_argument("--recipient", default="finance@example.com", help="Recipient email")
+    
 
     p_approve = sub.add_parser("approve", help="Approve and send a draft")
     p_approve.add_argument("draft_id", help="Draft ID to approve")

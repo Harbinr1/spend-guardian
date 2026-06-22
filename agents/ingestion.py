@@ -6,7 +6,7 @@ import csv
 import io
 import re
 from typing import Any, Dict, List, Union
-
+from mcp.audit_log import log_audit_entry
 from schemas.models import Transaction
 
 # Matches 13-19 digit sequences (credit-card shapes), allowing spaces/dashes between digits
@@ -64,7 +64,7 @@ def run(raw_data: Union[str, Dict[str, Any], List[Dict[str, Any]]]) -> Dict[str,
             transactions.append(txn)
         except Exception as exc:
             # Per agents/ingestion.md: "Malformed rows are logged and skipped"
-            print(f"WARNING: skipping malformed row {i}: {raw_row!r} ({exc})")
+            log_audit_entry("ingestion_error", {"row": row, "error": str(exc)})
             continue
 
     return {"transactions": [t.model_dump() for t in transactions]}

@@ -8,7 +8,7 @@ judges.
 import sys
 
 from eval.golden_cases import GOLDEN_TRANSACTIONS, EXPECTED
-from pipeline.orchestrator import run_pipeline
+from pipeline.adk_orchestrator import run_pipeline_adk as run_pipeline
 
 
 def main() -> int:
