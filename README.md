@@ -28,37 +28,24 @@ Spend Guardian is a **multi‑agent pipeline** that:
 ---
 
 ## Architecture
-Bank Statement
-│
-▼
-┌─────────────────┐
-│ Ingestion │ deterministic, no LLM
-└────────┬────────┘
-│
-▼
-┌─────────────────┐
-│ Classification │ rule dictionary → LOW‑tier LLM fallback
-└────────┬────────┘
-│
-▼
-┌─────────────────┐
-│ Waste Detection │ MEDIUM‑tier LLM for category overlap only
-└────────┬────────┘
-│
-▼
-┌─────────────────┐
-│ Recommendation │ HIGH‑tier LLM for action/reasoning prose
-└────────┬────────┘
-│
-▼
-┌─────────────────┐
-│ Human Review │ ← CLI / API (only here can status move past DRAFTED)
-└────────┬────────┘
-│
-▼
-┌─────────────────┐
-│ Action (draft) │ HIGH‑tier LLM — drafts only, structurally cannot send
-└─────────────────┘
+
+```mermaid
+flowchart TD
+    A[Bank Statement]
+    B[Ingestion<br/>Deterministic - No LLM]
+    C[Classification<br/>Rules → Low-tier LLM fallback]
+    D[Waste Detection<br/>Medium-tier LLM]
+    E[Recommendation<br/>High-tier LLM]
+    F[Human Review]
+    G[Action Draft<br/>Cannot Send]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+```
 
 text
 
