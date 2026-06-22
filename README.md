@@ -49,6 +49,19 @@ Confidence: MEDIUM
 Potential Savings: Investigation Required
 
 
+## Evaluation Results
+
+| Test Case | Result |
+|------------|---------|
+| Exact Duplicate Detection | PASS |
+| Monthly Recurrence Exclusion | PASS |
+| Human Review Enforcement | PASS |
+| High Confidence Overlap Prevention | PASS |
+| Draft-Only Action Agent | PASS |
+
+7/7 Golden Cases Passing
+
+
 ## Architecture
 
 ```mermaid
