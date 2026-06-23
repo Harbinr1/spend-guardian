@@ -96,7 +96,7 @@ An **eval suite** (`eval/run_evals.py`) enforces these rules against the ADK orc
 | **Agent / Multi‑agent system (ADK)** | Five agents defined as `google.adk.Agent` with `FunctionTool`s in `agents/adk_agents.py`; canonical orchestrator in `pipeline/adk_orchestrator.py` |
 | **Security features** | Card number redaction in ingestion, `requires_human_review=True` everywhere (runtime assert), Action agent structurally blocked from sending |
 | **Agent skills (CLI)** | Full CLI (`cli/audit.py`) with `audit`, `list‑flags`, `list‑drafts`, `draft`, and `approve` commands |
-| **Audit logging** | `mcp/audit_log.py` logs every approval with flag ID, action, and savings to `runs/audit_log.jsonl` |
+| **Audit logging** | `mcp/audit_log.py` logs every approval with flag ID, action, and savings to `runs/audit_log.json` |
 | **External integration** | Approved drafts are posted to a private Slack channel via webhook (`mcp/action_agent.py`) |
 
 ---
@@ -150,7 +150,7 @@ python -m cli.audit draft exact_dup_AWS_312.4 --recipient finance@acme.com
 python -m cli.audit approve draft_exact_dup_AWS_312.4
 ```
 
-This approves the draft, posts it to the configured Slack channel (or prints a mock if `SLACK_WEBHOOK_URL` is not set), logs the approval to `runs/audit_log.jsonl`, and marks the draft as SENT.
+This approves the draft, posts it to the configured Slack channel (or prints a mock if `SLACK_WEBHOOK_URL` is not set), logs the approval to `runs/audit_log.json`, and marks the draft as SENT.
 
 ### Run the Eval Suite
 
