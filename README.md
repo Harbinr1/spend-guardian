@@ -178,14 +178,6 @@ Spend Guardian includes a robust evaluation suite to assert the safety rules aga
 
 ```text
 $ python eval/run_evals.py
-
-Running Eval Suite...
-[PASS] Test 1: Exact Duplicate (Requires Human Review = True)
-[PASS] Test 2: Category Overlap (Confidence Capped at MEDIUM)
-[PASS] Test 3: Normal Recurrence (Zero Flags Generated)
-[PASS] Test 4: Action Agent Boundary (Outputs DRAFTED status only)
-[PASS] Test 5: Ingestion Skip (Malformed Rows safely ignored)
-
 =======================================================
 RESULTS: All 9 cases passed (7 golden pipeline + 2 ingestion unit tests).
 =======================================================
