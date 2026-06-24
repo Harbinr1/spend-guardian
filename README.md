@@ -58,9 +58,9 @@ graph TD
 
 ## 🚀 Key Features
 
-* 🧠 **Dynamic Model Routing:** Uses Llama-3.2-3B for lightweight classification tasks and routes up to powerful 20B+ models for complex waste detection and recommendation reasoning.
+* 🧠 **Dynamic Model Routing:** Uses Llama-3.2-3B for lightweight classification and powerful 20B models for waste detection and recommendation reasoning.
 * 🛡️ **Warning Banner & Graceful Skips:** The ingestion pipeline detects malformed rows (e.g., missing amounts), skips them gracefully to prevent crashes, and alerts the user via a prominent UI warning banner.
-* 🔄 **Live Audit Progress:** An overlay tracks the backend orchestrator state via 500ms polling, visually displaying the current pipeline stage and the specific AI tier (Lightweight, Medium, Advanced) actively analyzing the data.
+* 🔄 **Live Audit Progress:** An overlay with a timed stage progression shows the user exactly which step the pipeline is executing, complete with AI model badges (Lightweight, Medium, Advanced) for each reasoning stage.
 * 💬 **Real Slack Integration:** Employs a webhook to post actual notification messages when a human approves a draft outreach.
 * 🎨 **Cinematic Dark Dashboard:** A bento-grid, responsive, glassmorphism UI built in React and Vite.
 
@@ -102,7 +102,7 @@ Safety and determinism are paramount when dealing with financial data. This proj
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-org/spend-guardian.git
+   git clone git clone https://github.com/Harbinr1/spend-guardian.git
    cd spend-guardian
    ```
 
@@ -118,6 +118,9 @@ Safety and determinism are paramount when dealing with financial data. This proj
    ```env
    GROQ_API_KEY=your_groq_key_here
    SLACK_WEBHOOK_URL=your_slack_webhook_here
+   MODEL_LOW=groq/llama-3.2-3b-instant
+   MODEL_MEDIUM=groq/openai/gpt-oss-20b
+   MODEL_HIGH=groq/openai/gpt-oss-20b
    ```
 
 4. **Run the FastAPI Backend:**
@@ -181,14 +184,10 @@ Spend Guardian includes a robust evaluation suite to assert the safety rules aga
 $ python eval/run_evals.py
 
 Running Eval Suite...
-[PASS] Test 1: Exact Duplicate (Requires Human Review = True)
-[PASS] Test 2: Category Overlap (Confidence Capped at MEDIUM)
-[PASS] Test 3: Normal Recurrence (Zero Flags Generated)
-[PASS] Test 4: Action Agent Boundary (Outputs DRAFTED status only)
-[PASS] Test 5: Ingestion Skip (Malformed Rows safely ignored)
+All 9 cases passed (7 golden pipeline + 2 ingestion unit tests).
 
 =======================================================
-RESULTS: 5/5 Golden Cases Passed. 100% Guardrail Compliance.
+RESULTS: 9/9 Golden Cases Passed. 100% Guardrail Compliance.
 =======================================================
 ```
 </details>
