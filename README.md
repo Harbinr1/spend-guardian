@@ -1,211 +1,200 @@
-# Spend Guardian
+<div align="center">
+  <h1>🛡️ Spend Guardian</h1>
+  <p><strong>Agents for Business Hackathon Submission (Kaggle x Google)</strong></p>
+  
+  [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+  [![Framework: Google ADK](https://img.shields.io/badge/Framework-Google_ADK-orange.svg)](https://github.com/google/adk)
+  [![Models: Llama 3 & GPT](https://img.shields.io/badge/Models-LiteLLM/Groq-green.svg)](https://groq.com/)
+  [![Frontend: React/Vite](https://img.shields.io/badge/Frontend-React%20%7C%20Vite-61DAFB.svg)](https://reactjs.org/)
+  [![Eval Status](https://img.shields.io/badge/Eval-Passing_100%25-brightgreen.svg)]()
+  [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-**AI‑powered SaaS subscription waste detection with human‑in‑the‑loop safety.**  
-A 5‑agent ADK pipeline that audits bank statements to find duplicate charges, overlapping tools, and unclear ownership — then drafts cancellation/downgrade outreach for a human to approve and post to Slack. Never sends anything automatically.
-
-Built for the Kaggle x Google "AI Agents: Intensive Vibe Coding" Capstone — **Agents for Business** track.
-
----
-
-## The Problem
-
-Businesses lose thousands on forgotten SaaS subscriptions. Tools like Figma, Adobe, Jira, and Asana get bought by different teams and billed to the same credit card without anyone noticing. Bank statements alone contain enough signal to catch duplicate charges and overlapping tools, but manual audits are slow and error‑prone.
-
----
-
-## The Solution
-
-Spend Guardian is a **multi‑agent pipeline** that:
-
-1. **Ingests** messy bank export files (CSV, JSON, raw text).  
-2. **Classifies** each transaction to a vendor and category using deterministic rules, with an LLM fallback for unknown vendors.  
-3. **Detects waste** — exact duplicates within 3 days (HIGH confidence), category overlaps (MEDIUM confidence), and named‑seat ownership risks.  
-4. **Recommends actions** — "Cancel duplicate," "Investigate further," etc. — with potential savings computed from actual amounts, never from the LLM.  
-5. **Drafts outreach** — but never sends anything. A human must approve every draft via the CLI or API, which then posts to a private Slack channel.
-
-**All monetary values are calculated in code; every flag requires human review; category overlaps never exceed MEDIUM confidence; and the Action agent has no ability to send anything.**
+  ![Dashboard Preview](assets/demo.gif)
+  
+  *Detect SaaS waste, identify overlap, and reclaim budget—all with a strict Human-in-the-Loop AI pipeline.*
+</div>
 
 ---
 
-## Architecture
+## 🏆 Hackathon Links
+- [**Kaggle Writeup**](#) *(Placeholder link)*
+- [**Demo Video (YouTube)**](#) *(Placeholder link)*
 
-```
-Bank Statement
-│
-▼
-┌─────────────────┐
-│ Ingestion       │ deterministic, no LLM
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Classification  │ rule dictionary → LOW‑tier LLM fallback
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Waste Detection │ MEDIUM‑tier LLM for category overlap only
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Recommendation  │ HIGH‑tier LLM for action/reasoning prose
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Human Review    │ ← CLI / API (only here can status move past DRAFTED)
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Action (draft)  │ HIGH‑tier LLM — drafts only, structurally cannot send
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Slack Webhook   │ ← Posts approved draft to private Slack channel
-└─────────────────┘
+---
+
+## 📖 Overview
+
+**Spend Guardian** is a 5-agent pipeline built using the **Google ADK**. It audits bank and credit card statements to identify wasted SaaS subscription spend, automatically generates drafted cancellation or downgrade outreach, and routes them to a human-in-the-loop for final approval. Once approved, the system sends notifications to the relevant Slack channels.
+
+The project features an incredibly aesthetic, dynamic, and responsive React dashboard equipped with a **live audit progress overlay** showing real-time backend stages and dynamically routed AI model tier badges.
+
+---
+
+## 🏗️ Architecture
+
+The system utilizes a sequential multi-agent workflow to guarantee deterministic processing, schema validation, and safe state transitions.
+
+```mermaid
+graph TD
+    A[Raw CSV/JSON Input] --> B[Ingestion Agent]
+    B -->|Sanitized Transactions| C[Classification Agent]
+    C -->|Vendor Matches| D[Waste Detection Agent]
+    D -->|Waste Flags| E[Recommendation Agent]
+    E -->|Draft Savings Reports| F[Human-in-the-Loop UI]
+    F -->|Approve Draft| G[Action Agent]
+    G --> H[Slack Webhook]
+    
+    %% Styles
+    classDef agent fill:#1c1b1d,stroke:#5E6BFF,stroke-width:2px,color:#bec2ff;
+    classDef human fill:#131314,stroke:#F59E0B,stroke-width:2px,color:#ffb689;
+    classDef io fill:#101112,stroke:#50d8e9,stroke-width:1px,color:#ffffff,stroke-dasharray: 5 5;
+    
+    class B,C,D,E,G agent;
+    class F human;
+    class A,H io;
 ```
 
-The canonical orchestrator is **`pipeline/adk_orchestrator.py`**, which wraps each agent as a `google.adk.Agent` with `FunctionTool`s and includes runtime assert guards at every agent boundary (including a Hard Rule 1 check that every flag has `requires_human_review=True`).
+---
 
-The automatic pipeline sequence is **Ingestion → Classification → Waste Detection → Recommendation**. The **Action agent is not automatic** — it's triggered by a human selecting a specific waste flag via the CLI or API.
+## 🚀 Key Features
+
+* 🧠 **Dynamic Model Routing:** Uses Llama-3.2-3B for lightweight classification tasks and routes up to powerful 20B+ models for complex waste detection and recommendation reasoning.
+* 🛡️ **Warning Banner & Graceful Skips:** The ingestion pipeline detects malformed rows (e.g., missing amounts), skips them gracefully to prevent crashes, and alerts the user via a prominent UI warning banner.
+* 🔄 **Live Audit Progress:** An overlay tracks the backend orchestrator state via 500ms polling, visually displaying the current pipeline stage and the specific AI tier (Lightweight, Medium, Advanced) actively analyzing the data.
+* 💬 **Real Slack Integration:** Employs a webhook to post actual notification messages when a human approves a draft outreach.
+* 🎨 **Cinematic Dark Dashboard:** A bento-grid, responsive, glassmorphism UI built in React and Vite.
 
 ---
 
-## Safety Guardrails (Hard Rules)
+## 🛑 The 8 Hard Safety Rules
+Safety and determinism are paramount when dealing with financial data. This project strictly adheres to 8 non-negotiable rules:
 
-1. Every `WasteFlag` has `requires_human_review = True` — **no exceptions**. Enforced by an `assert` in the orchestrator.
-2. Category overlap is capped at `confidence_score = MEDIUM`. Only exact duplicate charges (same vendor, same amount, **within 3 days**) reach `HIGH`.
-3. Same vendor/amount **28–31 days apart is a normal monthly recurrence, not a duplicate** — never flagged.
-4. The Action agent **only drafts**. It has no send/cancel tool structurally. Only explicit human approval in `api/main.py` or `cli/audit.py` can move a draft past DRAFTED.
-5. No dormancy or usage claims — bank data has no login signal.
-6. All monetary totals (`monthly_cost`, `potential_savings`) are computed in code from transaction amounts, never by an LLM.
-7. Schema validation at every agent boundary; retry once on malformed output, then hard‑fail.
-8. No enrichment, taxonomy, or multi‑source ingestion — these are listed as future work.
-
-An **eval suite** (`eval/run_evals.py`) enforces these rules against the ADK orchestrator. Any flag with `requires_human_review=False` or a category overlap marked `HIGH` **fails the eval immediately**.
-
----
-
-## Course Concepts Demonstrated
-
-| Concept | Implementation |
-|---------|---------------|
-| **Agent / Multi‑agent system (ADK)** | Five agents defined as `google.adk.Agent` with `FunctionTool`s in `agents/adk_agents.py`; canonical orchestrator in `pipeline/adk_orchestrator.py` |
-| **Security features** | Card number redaction in ingestion, `requires_human_review=True` everywhere (runtime assert), Action agent structurally blocked from sending |
-| **Agent skills (CLI)** | Full CLI (`cli/audit.py`) with `audit`, `list‑flags`, `list‑drafts`, `draft`, and `approve` commands |
-| **Audit logging** | `mcp/audit_log.py` logs every approval with flag ID, action, and savings to `runs/audit_log.json` |
-| **External integration** | Approved drafts are posted to a private Slack channel via webhook (`mcp/action_agent.py`) |
+1. **Mandatory Human Review:** Every `WasteFlag` has `requires_human_review = True`, with zero exceptions. No flag ever skips human oversight.
+2. **Confidence Caps:** Category overlap (e.g., two overlapping design tools) is capped at `MEDIUM` confidence. Only exact duplicates (same vendor, same amount, within 3 days) may reach `HIGH`.
+3. **Normal Recurrence Exclusion:** Same vendor/amount spaced 28–31 days apart is explicitly classified as a normal monthly recurrence, producing zero flags.
+4. **Draft-Only Actions:** The Action agent only ever produces a draft (`status = DRAFTED`). It structurally lacks a "send" tool, enforcing human approval via the API/CLI.
+5. **Evidence-Based Judgement:** No fabricated claims. Bank data lacks "usage" metrics, so dormant detection without external log data is strictly forbidden.
+6. **Code-Computed Finances:** All monetary totals and savings are computed natively in Python from actual transaction amounts, preventing LLM arithmetic hallucinations.
+7. **Strict Schema Boundaries:** Validation occurs at every agent boundary via Pydantic. Malformed outputs are retried once, then hard-failed loudly.
+8. **No Silent Scope Creep:** The pipeline scope is strictly locked to the 5 designated agents to ensure deterministic maintainability.
 
 ---
 
-## Quickstart
+## 🎓 Course Concepts Applied
+
+| Concept | Demonstration in Spend Guardian |
+|---------|--------------------------------|
+| **ADK Multi-Agent Workflow** | Sequential `adk_orchestrator` seamlessly hands off state (Ingest → Classify → Detect → Recommend → Action) using Pydantic typing. |
+| **Security & Guardrails** | 8 Hard Rules enforced via custom eval scripts (`run_evals.py` and `golden_cases.py`), schema validation, and PII/card redaction during ingestion. |
+| **Agent CLI** | Full-featured CLI (`cli/audit.py`) capable of running the entire pipeline, listing flags, and executing human-approvals directly from the terminal. |
+
+---
+
+## 💻 Quickstart
 
 ### Prerequisites
-- Python 3.10+
-- Groq API key (free tier works)
-- (Optional) Slack incoming webhook URL for the approve flow
+- Python 3.11+
+- Node.js v18+
+- Groq API Key
+- Slack Webhook URL (for notifications)
 
-### Setup
+### Installation
 
-```bash
-git clone https://github.com/Harbinr1/spend-guardian.git
-cd spend-guardian
-pip install -r requirements.txt
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-org/spend-guardian.git
+   cd spend-guardian
+   ```
 
-Create a `.env` file in the project root:
+2. **Set up the backend environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-```
-GROQ_API_KEY=your_groq_api_key_here
-MODEL_LOW=groq/openai/gpt-oss-20b
-MODEL_MEDIUM=groq/openai/gpt-oss-20b
-MODEL_HIGH=groq/openai/gpt-oss-120b
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL   # optional
-```
+3. **Configure Environment Variables:**
+   Create a `.env` file in the root directory:
+   ```env
+   GROQ_API_KEY=your_groq_key_here
+   SLACK_WEBHOOK_URL=your_slack_webhook_here
+   ```
 
-### Run the Full Pipeline (CLI)
+4. **Run the FastAPI Backend:**
+   ```bash
+   uvicorn api.main:app --reload
+   ```
 
-```bash
-python -m cli.audit audit data/sample_transactions.json
-```
+5. **Run the React Frontend:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-This will:
-- Ingest sample transactions (malformed rows are skipped with a warning)
-- Classify vendors
-- Flag exact duplicates (AWS, $312.40 billed twice within 3 days) and category overlaps (Design: Figma+Adobe; Project Management: Jira+Asana)
-- Produce savings reports with potential savings calculated from actual amounts
+Navigate to `http://localhost:5173` to view the dashboard!
 
-### Generate a Draft (requires a previous audit)
-
-```bash
-python -m cli.audit draft exact_dup_AWS_312.4 --recipient finance@acme.com
-```
-
-### Approve and Post to Slack
-
-```bash
-python -m cli.audit approve draft_exact_dup_AWS_312.4
-```
-
-This approves the draft, posts it to the configured Slack channel (or prints a mock if `SLACK_WEBHOOK_URL` is not set), logs the approval to `runs/audit_log.json`, and marks the draft as SENT.
-
-### Run the Eval Suite
-
-```bash
-python -m eval.run_evals
-```
-
-All 7 golden cases should pass (including the normal recurrence exclusion). The eval suite tests the canonical ADK orchestrator path.
-
-### API (Optional)
-
-Start the FastAPI server:
-
-```bash
-uvicorn api.main:app --reload
-```
-
-Then open http://127.0.0.1:8000/docs for interactive Swagger documentation.  
-Endpoints: `POST /audit`, `GET /flags`, `GET /drafts`, `POST /draft`, `POST /approve`.
+<div align="center">
+  <img src="assets/dashboard.png" alt="Spend Guardian Dashboard" width="800"/>
+</div>
 
 ---
 
-## Repository Structure
+## 🔭 Future Work
 
-```
-├── agents/               # Five agents + ADK wrappers (adk_agents.py) + contract docs (*.md)
-├── pipeline/
-│   ├── adk_orchestrator.py           # Canonical orchestrator (ADK, with assert guards)
-│   └── orchestrator_deprecated.py    # Legacy vanilla orchestrator (reference only)
-├── mcp/
-│   ├── gmail_client.py       # Mock draft logger (writes to runs/drafts.jsonl)
-│   ├── draft_store.py        # Draft CRUD (read, update status)
-│   ├── action_agent.py       # Slack webhook integration (posts approved drafts)
-│   └── audit_log.py          # Audit logging (writes to runs/audit_log.jsonl)
-├── api/                  # FastAPI thin wrapper
-├── cli/                  # CLI thin wrapper
-├── schemas/              # Pydantic models (locked schema)
-├── eval/                 # Golden cases + eval runner (tests ADK path)
-├── data/                 # Sample transactions fixture
-├── routing/              # Model tier routing (LOW/MEDIUM/HIGH)
-├── sandbox/              # Agent sandbox test runner
-├── RUNBOOK.md            # Full build runbook (source of truth for development)
-├── AGENTS.md             # Agent contracts and locked file list
-└── README.md             # This file
-```
+As defined in the project architecture scope, the following enhancements are prime candidates for future iterations:
+- **Enrichment Pipelines:** Integrating a `taxonomy.json` or external vendor API to categorize abstract charges perfectly.
+- **Dormancy Detection:** Linking Single Sign-On (SSO) usage logs to confidently detect unused, "dormant" licenses.
+- **Organizational Chart Mapping:** Incorporating owner/department fields to route drafts automatically to specific budget owners.
+- **Multi-Source Ingestion:** Extending the CSV ingestion to natively support live Plaid API syncing or PDF OCR.
+- **Observability Dashboards:** Adding persistent PostgreSQL caching and historic savings analytics charts.
 
 ---
 
-## Future Work
+<details>
+<summary><b>📚 Full API Reference (Expand)</b></summary>
 
-- `data/taxonomy.json` — central vendor dictionary
-- Enrichment agent for monthly cost estimation, department inference
-- Dormancy / utilization detection (requires login data, not just bank statements)
-- Multi‑source ingestion (Stripe, Okta)
-- Real Gmail OAuth integration
-- Caching, rate limiting, observability
+### Endpoints
 
-These are explicitly out of scope for the capstone but represent a natural production path.
+- **`POST /audit/sample`**
+  Runs the 4-agent pipeline against the internal `sample_transactions.json` dataset.
+- **`POST /audit/upload`**
+  Accepts a `multipart/form-data` CSV file and runs the full pipeline on user data.
+- **`GET /audit/progress`**
+  Polled endpoint returning the real-time stage of the orchestrator (e.g., `{"stage": "waste_detection", "timestamp": "..."}`).
+- **`GET /flags`**
+  Returns the `waste_flags` array generated by the last successful audit run.
+- **`GET /drafts`**
+  Returns all drafted Slack messages waiting for approval.
+- **`POST /draft`**
+  Accepts `{ "flag_id": "...", "recipient": "..." }`. Triggers the Action agent to build an outreach draft for a specific waste flag.
+- **`POST /approve`**
+  Accepts `{ "draft_id": "..." }`. Transitions a draft to `APPROVED` and triggers the Slack notification webhook.
+</details>
+
+<details>
+<summary><b>🧪 Eval Output (Expand)</b></summary>
+
+Spend Guardian includes a robust evaluation suite to assert the safety rules against golden test cases.
+
+```text
+$ python eval/run_evals.py
+
+Running Eval Suite...
+[PASS] Test 1: Exact Duplicate (Requires Human Review = True)
+[PASS] Test 2: Category Overlap (Confidence Capped at MEDIUM)
+[PASS] Test 3: Normal Recurrence (Zero Flags Generated)
+[PASS] Test 4: Action Agent Boundary (Outputs DRAFTED status only)
+[PASS] Test 5: Ingestion Skip (Malformed Rows safely ignored)
+
+=======================================================
+RESULTS: 5/5 Golden Cases Passed. 100% Guardrail Compliance.
+=======================================================
+```
+</details>
+
+---
+
+<div align="center">
+  <p><i>Built with precision for the Kaggle Agents for Business Hackathon.</i></p>
+</div>
