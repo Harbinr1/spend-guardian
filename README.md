@@ -26,7 +26,7 @@
 
 **Spend Guardian** is a 5-agent pipeline built using the **Google ADK**. It audits bank and credit card statements to identify wasted SaaS subscription spend, automatically generates drafted cancellation or downgrade outreach, and routes them to a human-in-the-loop for final approval. Once approved, the system sends notifications to the relevant Slack channels.
 
-The project features an incredibly aesthetic, dynamic, and responsive React dashboard equipped with a **live audit progress overlay** showing a cinematic progression through all five pipeline stages and dynamically routed AI model tier badges.
+The project features an incredibly aesthetic, dynamic, and responsive React dashboard equipped with a **cinematic audit progress overlay that walks users through each pipeline stage with AI model tier badges**.
 
 ---
 
