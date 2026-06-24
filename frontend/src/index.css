@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #070708;
+  color: #e5e2e3;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #070708;
+}
+::-webkit-scrollbar-thumb {
+  background: #232426;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #353436;
+}
+
+/* Responsive Utilities */
+.hero-text {
+  font-size: 72px;
+}
+.hero-text-dashboard {
+  font-size: 64px;
+}
+.bento-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.bento-item-full {
+  width: 100%;
+}
+.bento-item-third {
+  width: calc(33.333% - 14px);
+}
+.nav-container {
+  display: flex;
+  align-items: baseline;
+  gap: 48px;
+}
+.header-controls {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.touch-target {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.audit-modal {
+  width: 600px;
+  border-radius: 8px;
+  padding: 40px;
+}
+
+/* Tablet / Small Desktop */
+@media (max-width: 768px) {
+  .hero-text {
+    font-size: 48px !important;
+  }
+  .hero-text-dashboard {
+    font-size: 48px !important;
+  }
+  .bento-item-third {
+    width: calc(50% - 10px);
+  }
+  .nav-container {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .header-controls {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .header-controls button {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .hero-text {
+    font-size: 32px !important;
+  }
+  .hero-text-dashboard {
+    font-size: 32px !important;
+  }
+  .bento-item-third {
+    width: 100%;
+  }
+  .nav-container nav {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .audit-modal {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    padding: 24px !important;
+    border: none !important;
+  }
+}

@@ -96,8 +96,9 @@ def _category_overlap_flags(
 ) -> List[WasteFlag]:
     """
     For every category that has two or more different vendors, use the MEDIUM
-    model to assess the overlap. Hard-cap confidence at MEDIUM and force
-    requires_human_review=True in code, ignoring what the model returns.
+    model to assess the overlap in a single batched prompt.
+    Hard-cap confidence at MEDIUM and force requires_human_review=True in code,
+    ignoring what the model returns.
     """
     txn_by_id = {t["transaction_id"]: t for t in transactions}
 
@@ -106,58 +107,78 @@ def _category_overlap_flags(
     for vm in vendor_matches:
         cat_map[vm["category"]].append(vm)
 
-    model = resolve_model(TaskTier.MEDIUM)
-    flags = []
-
+    # Build a list of all categories that have >=2 vendors
+    categories_to_assess = []
+    category_data = {}
     for category, items in cat_map.items():
-        # Distinct vendors in this category
         vendors = set(vm["vendor_name"] for vm in items)
-        if len(vendors) < 2:
-            continue
+        if len(vendors) >= 2:
+            categories_to_assess.append(category)
+            category_data[category] = {
+                "vendors": sorted(vendors),
+                "transaction_ids": [vm["transaction_id"] for vm in items],
+                "monthly_cost": sum(
+                    txn_by_id[vm["transaction_id"]]["amount"]
+                    for vm in items if vm["transaction_id"] in txn_by_id
+                ),
+            }
 
-        vendor_list = ", ".join(sorted(vendors))
-        prompt = (
-            "You are a spend‑audit assistant. The following vendors are all "
-            f"categorised as '{category}': {vendor_list}. "
-            "Because you only have bank transaction data and no usage data, "
-            "you cannot assert redundancy. Write a careful, evidence‑based "
-            "reasoning that mentions the category overlap and notes that "
-            "distinct use cases may exist. "
-            "Respond ONLY as JSON: {\"reasoning\": \"...\"}"
+    if not categories_to_assess:
+        return []
+
+    # Create a single batched prompt for all overlapping categories
+    batch_prompt = (
+        "You are a spend‑audit assistant. For each category below, write a careful, evidence‑based "
+        "reasoning that mentions the category overlap and notes that distinct use cases may exist. "
+        "You must NOT claim redundancy. "
+        "Respond ONLY as a JSON object where each key is the exact category name and the value is a string with the reasoning.\n\n"
+    )
+    for cat in categories_to_assess:
+        vendor_list = ", ".join(category_data[cat]["vendors"])
+        batch_prompt += f'"{cat}": "Multiple vendors in category \'{cat}\': {vendor_list}. ...",\n'
+    batch_prompt += "\nYour response must be valid JSON with exactly those keys."
+
+    model = resolve_model(TaskTier.MEDIUM)
+    try:
+        response = completion(
+            model=model,
+            messages=[{"role": "user", "content": batch_prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"},
+            max_tokens=500,
         )
-
-        try:
-            response = completion(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.0,
-                response_format={"type": "json_object"},
-                max_tokens=200,
-            )
-            content = response["choices"][0]["message"]["content"]
-            llm_output = json.loads(content)
-            reasoning = llm_output.get("reasoning", "")
-        except Exception:
-            reasoning = (
-                f"Multiple vendors in category '{category}': {vendor_list}. "
+        content = response["choices"][0]["message"]["content"]
+        batch_result = json.loads(content)
+    except Exception:
+        # Fallback: generate simple reasoning for each category
+        batch_result = {}
+        for cat in categories_to_assess:
+            vendor_list = ", ".join(category_data[cat]["vendors"])
+            batch_result[cat] = (
+                f"Multiple vendors in category '{cat}': {vendor_list}. "
                 "No usage data available to confirm distinct use cases."
             )
 
-        # Collect all transaction_ids for this category
-        tids = [vm["transaction_id"] for vm in items]
-        monthly_cost = sum(txn_by_id[tid]["amount"] for tid in tids if txn_by_id.get(tid))
-
-        flag = WasteFlag(
-            flag_id=f"cat_overlap_{category}",
-            vendor_name=", ".join(sorted(vendors)),   # aggregate
+    # Build flags using the batched results
+    flags = []
+    for cat in categories_to_assess:
+        reasoning = batch_result.get(cat, "")
+        if not reasoning:
+            vendor_list = ", ".join(category_data[cat]["vendors"])
+            reasoning = (
+                f"Multiple vendors in category '{cat}': {vendor_list}. "
+                "No usage data available to confirm distinct use cases."
+            )
+        flags.append(WasteFlag(
+            flag_id=f"cat_overlap_{cat}",
+            vendor_name=", ".join(category_data[cat]["vendors"]),
             overlap_category="category_overlap",
-            confidence_score=Confidence.MEDIUM,       # hard‑capped
-            requires_human_review=True,               # forced
+            confidence_score=Confidence.MEDIUM,
+            requires_human_review=True,
             reason=reasoning,
-            transaction_ids=tids,
-            monthly_cost=monthly_cost,
-        )
-        flags.append(flag)
+            transaction_ids=category_data[cat]["transaction_ids"],
+            monthly_cost=category_data[cat]["monthly_cost"],
+        ))
 
     return flags
 

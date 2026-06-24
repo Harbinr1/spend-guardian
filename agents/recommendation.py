@@ -40,7 +40,6 @@ def run(input_data: Dict[str, Any]) -> Dict[str, Any]:
             "confidence_score": flag.confidence_score.value,
             "reason": flag.reason,
             "monthly_cost": flag.monthly_cost,
-            "transaction_ids": flag.transaction_ids,
         }
 
         prompt = (
@@ -83,8 +82,7 @@ def _call_llm_with_retry_and_validate(
             model=model,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
-            response_format={"type": "json_object"},
-            max_tokens=300,
+            max_tokens=500,
         )
         raw = response["choices"][0]["message"]["content"]
 

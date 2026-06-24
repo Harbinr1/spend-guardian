@@ -10,9 +10,8 @@ A 5-agent ADK pipeline (Ingestion → Classification → Waste Detection →
 Recommendation → Action) that audits bank/credit-card statements to find
 wasted SaaS subscription spend, and produces draft cancellation/downgrade
 outreach for human approval. Built for a Kaggle x Google "Agents for
-Business" hackathon. Stack: Python, Google ADK, LiteLLM routed to Groq
-(Gemini API is regionally restricted for this developer), FastAPI,
-Pydantic, React/Vite frontend (not yet started).
+Business" hackathon. Stack: Python, Google ADK, LiteLLM routed to Groq,
+FastAPI, Pydantic, React/Vite frontend (functional, connected to API).
 
 ## 2. Hard rules — apply to every file, no exceptions
 
@@ -52,30 +51,52 @@ Pydantic, React/Vite frontend (not yet started).
 - `agents/ingestion.py` — DONE, sandbox-tested, working. Handles CSV
   string, dict-with-csv_data, or a bare list of row dicts. Redacts
   13–19-digit card-shaped sequences. Logs and skips malformed rows.
-- `agents/classification.py` — DONE. All three pending fixes applied
-  (temperature, retry/hard-fail, match_method/match_confidence).
+  Returns a `warnings` list alongside transactions.
+- `agents/classification.py` — DONE. Rule dictionary first, LLM fallback
+  second. In-memory cache for repeated unknown vendors. Retry once, then
+  hard‑fail. Uses `match_method` and `match_confidence`.
 - `agents/waste_detection.py` — DONE, sandbox‑tested, eval‑verified.
   Exact duplicates use date‑clustering to explicitly exclude normal
-  monthly recurrences.
-- `agents/recommendation.py` — DONE, sandbox‑tested. Uses HIGH‑tier
-  model; potential_savings from flag, never from LLM.
+  monthly recurrences. Category overlap uses a single batched MEDIUM‑tier
+  LLM call, capped at MEDIUM confidence. Named‑seat detection is
+  deterministic. Monthly cost computed in code.
+- `agents/recommendation.py` — DONE, sandbox‑tested. HIGH‑tier model
+  writes action/reasoning; `potential_savings` from flag, never LLM.
+  Retry + hard‑fail on malformed output.
 - `agents/action.py` — DONE, sandbox‑tested. Always produces
-  status=DRAFTED; no send/cancel tools.
-- `pipeline/orchestrator.py` — DONE. Runs ingestion → classification →
-  waste detection → recommendation. Action excluded from automatic
-  sequence.
-- `mcp/gmail_client.py` — DONE (mock draft logger).
+  status=DRAFTED; no send/cancel tools. Retry + hard‑fail.
+- `pipeline/orchestrator.py` — DONE (original, non‑ADK). Runs ingestion →
+  classification → waste detection → recommendation. Action excluded.
+- `pipeline/adk_orchestrator.py` — DONE (ADK‑based pipeline, identical
+  sequence). Returns dict with `state` and `warnings`. Writes progress
+  stages via `mcp/progress.py` for live overlay.
+- `mcp/gmail_client.py` — DONE (mock draft logger with separate
+  `create_draft()` and `send_draft()`).
 - `mcp/draft_store.py` — DONE (shared draft storage helpers).
-- `api/main.py` — DONE (thin FastAPI wrapper).
-- `cli/audit.py` — DONE (CLI with audit, list-flags, list-drafts,
-  draft, approve commands).
+- `mcp/progress.py` — DONE (writes/reads/clears pipeline stage to
+  `runs/progress.json`; stages: ingestion, classification,
+  waste_detection, recommendation, complete).
+- `mcp/action_agent.py` — DONE (formatted Slack message builder).
+- `mcp/slack_client.py` — DONE (real Slack notification via webhook).
+- `mcp/audit_log.py` — DONE (optional audit event logging).
+- `api/main.py` — DONE (thin FastAPI wrapper; endpoints: `/audit`,
+  `/audit/sample`, `/audit/upload`, `/audit/progress`, `/flags`,
+  `/drafts`, `/draft`, `/approve`; CORS enabled; progress stub returns
+  `{"stage": "idle"}`; real progress file used by orchestrator but not
+  polled by frontend).
+- `cli/audit.py` — DONE (CLI with `audit`, `list-flags`, `list-drafts`,
+  `draft`, `approve` commands; persists state to `runs/last_audit.json`).
 - `data/sample_transactions.json` — DONE, includes one intentionally
   malformed row (Slack with amount="N/A") to verify ingestion's skip
   behaviour.
 - `eval/golden_cases.py`, `eval/run_evals.py` — DONE. Normal‑recurrence
-  case added, all hard‑rule checks passing.
+  case added, all hard‑rule checks passing (9 cases: 7 golden pipeline
+  + 2 ingestion unit tests).
 - `agents/adk_agents.py` — DONE (ADK Agent wrappers for all five agents).
-- `pipeline/adk_orchestrator.py` — DONE (ADK‑based pipeline, identical sequence to original).
+- `frontend/` — DONE (React/Vite dashboard with bento‑grid, dark theme,
+  responsive design, CSV upload, live warning banner, timed audit
+  progress overlay with AI model badges, Slack send button).
+- `RUNBOOK.md` — this document.
 - `AGENTS.md` — exists, contains the "do not touch" file list and core
   guardrails.
 
@@ -86,6 +107,7 @@ Pydantic, React/Vite frontend (not yet started).
 - `eval/golden_cases.py`
 - `routing/model_router.py`
 - `data/` (test fixtures — treat any unrequested change as a bug)
+- `frontend/`
 
 ## 5. Locked schema — schemas/models.py
 

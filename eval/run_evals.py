@@ -96,7 +96,8 @@ def main() -> int:
     failures = []
 
     # --- Pipeline golden cases ---
-    state = run_pipeline(GOLDEN_TRANSACTIONS)
+    result = run_pipeline(GOLDEN_TRANSACTIONS)
+    state = result["state"]
 
     # Exact duplicate check
     duplicates = [f for f in state.waste_flags if f.overlap_category == "exact_duplicate"]

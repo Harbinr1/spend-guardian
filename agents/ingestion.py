@@ -49,6 +49,7 @@ def run(raw_data: Union[str, Dict[str, Any], List[Dict[str, Any]]]) -> Dict[str,
         rows = _rows_from_csv_string(str(raw_data))
 
     transactions: List[Transaction] = []
+    warnings: List[str] = []
 
     for i, raw_row in enumerate(rows):
         row = _normalize_row(raw_row)
@@ -65,9 +66,10 @@ def run(raw_data: Union[str, Dict[str, Any], List[Dict[str, Any]]]) -> Dict[str,
         except Exception as exc:
             # Per agents/ingestion.md: "Malformed rows are logged and skipped"
             log_audit_entry("ingestion_error", {"row": row, "error": str(exc)})
+            warnings.append(f"Skipped malformed row {i + 1}: {exc}")
             continue
 
-    return {"transactions": [t.model_dump() for t in transactions]}
+    return {"transactions": [t.model_dump() for t in transactions], "warnings": warnings}
 
 
 if __name__ == "__main__":

@@ -152,7 +152,7 @@
     {
       "transaction_id": "txn_11",
       "vendor_name": "Raycast",
-      "category": "Software",
+      "category": "Product",
       "match_method": "llm_fallback",
       "match_confidence": "low"
     }
@@ -177,7 +177,7 @@
       "overlap_category": "category_overlap",
       "confidence_score": "medium",
       "requires_human_review": true,
-      "reason": "Multiple vendors in category 'Design': Adobe Creative Cloud, Figma. No usage data available to confirm distinct use cases.",
+      "reason": "Multiple vendors in category 'Design': Adobe Creative Cloud and Figma. Both provide design tools and share overlapping features such as vector editing and asset libraries, yet they serve distinct use cases\u2014Adobe Creative Cloud is often chosen for high\u2011resolution graphics, print workflows, and advanced photo editing, while Figma is preferred for real\u2011time collaborative UI/UX design and prototyping. The overlap in functionality does not imply redundancy, as each platform offers unique strengths that cater to different project requirements.",
       "transaction_ids": [
         "txn_0",
         "txn_1"
@@ -190,7 +190,7 @@
       "overlap_category": "category_overlap",
       "confidence_score": "medium",
       "requires_human_review": true,
-      "reason": "Multiple vendors in category 'Project Management': Asana, Jira. No usage data available to confirm distinct use cases.",
+      "reason": "Multiple vendors in category 'Project Management': Asana and Jira. Both offer task tracking, workflow customization, and reporting, creating an overlap in core project management capabilities. However, they target different use cases: Asana is widely used for general team collaboration and marketing projects, whereas Jira is tailored for software development teams with features like issue tracking, sprint planning, and integration with code repositories. This distinction ensures that the overlap does not equate to redundancy, as each tool addresses specific workflow needs.",
       "transaction_ids": [
         "txn_2",
         "txn_3"
@@ -202,22 +202,22 @@
     {
       "report_id": "report_exact_dup_AWS_312.4",
       "flag_id": "exact_dup_AWS_312.4",
-      "action": "Cancel duplicate subscription",
-      "reasoning": "The flag shows an exact duplicate AWS charge of 312.4 appearing twice within 3 days, costing $624.8 monthly. This clear duplication warrants cancelling the duplicate subscription, pending human verification.",
+      "action": "Contact vendor",
+      "reasoning": "The flag indicates a high\u2011confidence exact duplicate charge from AWS (two identical charges within 3 days). This suggests a billing error that should be resolved directly with AWS support. All flags require human review, so contacting the vendor is the appropriate next step.",
       "potential_savings": 624.8
     },
     {
       "report_id": "report_cat_overlap_Design",
       "flag_id": "cat_overlap_Design",
       "action": "Investigate further",
-      "reasoning": "Multiple design tools (Adobe Creative Cloud, Figma) overlap in category; without usage data we cannot confirm distinct needs. Recommend human review to assess redundancy and potential cost optimization.",
+      "reasoning": "The flag indicates a category overlap between Adobe Creative Cloud and Figma, both offering design tools with some shared features. Since the overlap does not necessarily imply redundancy and each platform serves distinct use cases, a direct cancellation or downgrade is premature. Human review is needed to assess actual usage, project requirements, and potential cost savings before making any changes. All flags require human review.",
       "potential_savings": 104.99000000000001
     },
     {
       "report_id": "report_cat_overlap_Project Management",
       "flag_id": "cat_overlap_Project Management",
       "action": "Investigate further",
-      "reasoning": "Two project\u2011management tools (Asana, Jira) are subscribed to in the same category with a medium confidence overlap. Without usage data we cannot confirm distinct use cases, so a human should review the subscriptions to decide if one can be removed or consolidated. All flags require human review.",
+      "reasoning": "The flag indicates a category overlap between Asana and Jira, both offering project\u2011management capabilities but targeting different workflow needs (general collaboration vs. software development). While the overlap does not necessarily imply redundancy, it warrants a human review to assess whether both tools are truly required for the organization\u2019s distinct use cases. All flags require human review before any cancellation or downgrade decisions are made.",
       "potential_savings": 94.99
     }
   ]

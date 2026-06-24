@@ -9,20 +9,23 @@ DRAFTS_FILE = Path("runs/drafts.jsonl")
 
 
 def read_all_drafts() -> List[Dict[str, Any]]:
-    """Return all parsed draft entries from the log file."""
+    """Return all parsed draft entries from the log file, deduplicated by draft_id (latest wins)."""
     if not DRAFTS_FILE.exists():
         return []
-    drafts = []
+    drafts_dict = {}
     with open(DRAFTS_FILE, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             try:
-                drafts.append(json.loads(line))
+                d = json.loads(line)
+                draft_id = d.get("draft_id")
+                if draft_id:
+                    drafts_dict[draft_id] = d
             except json.JSONDecodeError:
                 continue
-    return drafts
+    return list(drafts_dict.values())
 
 
 def find_draft_by_id(draft_id: str) -> Optional[Dict[str, Any]]:

@@ -49,7 +49,7 @@ def _call_llm(description: str) -> Dict[str, str]:
     response = completion(
         model=model,
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=100,
+        max_tokens=500,
         temperature=0.0,
         response_format={"type": "json_object"},
     )
