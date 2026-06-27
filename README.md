@@ -17,7 +17,7 @@
 ---
 
 ## 🏆 Hackathon Links
-- [**Kaggle Writeup**](#) *((https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781938855022))*
+- [**Kaggle Writeup**](#) https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1781938855022
 - [**Demo Video (YouTube)**](#) *((https://www.youtube.com/watch?v=MrlugDZVFEI&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fwww.kaggle.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.kaggle.com))*
 
 ---
