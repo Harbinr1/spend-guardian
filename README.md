@@ -58,7 +58,7 @@ graph TD
 
 ## 🚀 Key Features
 
-* 🧠 **Dynamic Model Routing:** Uses Llama-3.2-3B for lightweight classification tasks and routes up to powerful 20B+ models for complex waste detection and recommendation reasoning.
+* 🧠 **Dynamic Model Routing:** Uses Llama-3.1-8B for lightweight classification tasks and routes up to powerful 20B+ models for complex waste detection and recommendation reasoning.
 * 🛡️ **Warning Banner & Graceful Skips:** The ingestion pipeline detects malformed rows (e.g., missing amounts), skips them gracefully to prevent crashes, and alerts the user via a prominent UI warning banner.
 * 🔄 **Live Audit Progress:** A timed, cinematic progress overlay walks the user through the five pipeline stages, with dynamic AI‑model‑tier badges (Lightweight, Medium, Advanced) illustrating which agent is handling the data at each step.
 * 💬 **Real Slack Integration:** Employs a webhook to post actual notification messages when a human approves a draft outreach.
