@@ -117,8 +117,8 @@ Safety and determinism are paramount when dealing with financial data. This proj
    Create a `.env` file in the root directory:
    ```env
    GROQ_API_KEY=your_groq_key_here
-   MODEL_LOW=groq/llama-3.2-3b-instant
-   MODEL_MEDIUM=groq/openai/gpt-oss-20b
+   MODEL_LOW=groq/llama-3.1-8b-instant
+   MODEL_MEDIUM=groq/llama-3.1-8b-instant
    MODEL_HIGH=groq/openai/gpt-oss-20b
    SLACK_WEBHOOK_URL=your_slack_webhook_here   # optional
    ```
